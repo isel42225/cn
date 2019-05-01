@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Contracts">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../Contracts.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

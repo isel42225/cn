@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "forumstubs";
+
+package forumservice; // package do proto
+
+// The greeting service definition.
+service ForumService {
+    rpc topicSubscribe (SubscribeUnSubscribe) returns (stream ForumMessage);
+    rpc topicUnSubscribe (SubscribeUnSubscribe) returns (ForumMessage);
+    rpc getAllTopics (Empty) returns (ExistingTopics);
+    rpc messagePublish (ForumMessage) returns (Empty);
+
+}
+
+message Empty{}
+
+message SubscribeUnSubscribe {
+    string usrName = 1;
+    string topicName = 2;
+}
+
+message ExistingTopics {
+    // lista de topic names
+    repeated string topicName = 1;
+}
+
+message ForumMessage {
+    string fromUser = 1;
+    string topicName = 2;
+    string txtMsg = 3;
+}
