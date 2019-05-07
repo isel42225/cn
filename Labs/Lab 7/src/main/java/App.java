@@ -37,6 +37,7 @@ public class App {
         while((input = scanner.nextInt()) != 99) {
             Command cmd = commands.get(input).y();
             cmd.execute();
+            printCommands();
         }
     }
 

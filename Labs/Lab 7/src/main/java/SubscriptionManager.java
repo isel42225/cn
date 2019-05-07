@@ -50,7 +50,9 @@ public class SubscriptionManager {
     }
 
     private void messageReceiverHandler(PubsubMessage msg, AckReplyConsumer ackReply) {
-        System.out.println("Message (Id:" + msg.getMessageId() + " Data:" + msg.getData().toStringUtf8() + ")");
+        String prettyMessage =
+                String.format("Message [# %s]\n%s", msg.getMessageId(), msg.getData().toStringUtf8());
+        System.out.println(prettyMessage);
         ackReply.ack();
     }
 }

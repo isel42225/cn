@@ -23,11 +23,7 @@ public class BlobManager {
 
 
     public BlobManager() {
-        try {
-            this.storage = StorageFactory.get();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.storage = StorageFactory.get();
     }
 
 
