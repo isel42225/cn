@@ -4,7 +4,7 @@ import io.grpc.ManagedChannelBuilder;
 
 public abstract class Command {
     protected final ManagedChannel channel ;
-    private static String FORUM_IP = "35.189.85.111";
+    private static String FORUM_IP = "35.189.77.168";
     private static int FORUM_PORT = 8000;
 
     public Command() {
