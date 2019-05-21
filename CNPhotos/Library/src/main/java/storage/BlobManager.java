@@ -1,14 +1,13 @@
+package storage;
+
 import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.*;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.regex.Pattern;
 
 public class BlobManager {
     private final String BUCKET_NAME = "cn-photos-g08";
@@ -16,6 +15,13 @@ public class BlobManager {
     private final int BUFFER_SIZE = 4 * 1024;
     private final Storage storage = StorageOptions.getDefaultInstance().getService();
 
+
+    public byte [] getBlobContent(String name) {
+        BlobId blobId = BlobId.of(BUCKET_NAME, name);
+        Blob blob = storage.get(blobId);
+        byte [] content =  blob.getContent(Blob.BlobSourceOption.generationMatch());
+        return content;
+    }
 
     public boolean uploadBlob(Path filePath){
         try {
