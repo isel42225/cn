@@ -42,6 +42,10 @@ public class BlobManager {
         }
     }
 
+    public boolean uploadBlob(byte [] content, String filename) {
+        
+    }
+
     private boolean bigUpload(Path filePath, BlobInfo bInfo) {
         try(WriteChannel channel = storage.writer(bInfo)){
             byte [] buffer = new byte[BUFFER_SIZE];
