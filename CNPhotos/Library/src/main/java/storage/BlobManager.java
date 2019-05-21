@@ -43,7 +43,15 @@ public class BlobManager {
     }
 
     public boolean uploadBlob(byte [] content, String filename) {
-        
+        String contentType = "image/jpeg";
+        String [] split = filename.split("\\.");
+        String file = split[0]+"withFaces";
+        String extension = split[1];
+        filename = file+extension;
+        BlobId blobId = BlobId.of(BUCKET_NAME, filename);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(contentType).build();
+        storage.create(blobInfo, content);
+        return true;
     }
 
     private boolean bigUpload(Path filePath, BlobInfo bInfo) {

@@ -7,8 +7,6 @@ import storage.BlobManager;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class Worker implements Runnable {
@@ -28,9 +26,7 @@ public class Worker implements Runnable {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     ImageIO.write(imgWithFaces,"jpg",baos);
                     byte [] byteFaces = baos.toByteArray();
-                    blobManager.uploadBlob(byteFaces, filename);
-                    Path outputPath = Paths.get("C:\\Users\\gonca\\ISEL\\Cadeiras\\18-19v\\CN\\vision-imgs\\faces.jpg");
-                    ImageIO.write(imgWithFaces,"jpg",outputPath.toFile());
+                    //blobManager.uploadBlob(byteFaces, filename);
                 }
                 // save labels on firestore
                 ackReplyConsumer.ack();
