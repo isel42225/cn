@@ -43,7 +43,7 @@ public class BlobManager {
     }
 
     public boolean uploadBlob(byte [] content, String filename) {
-        
+        return false;
     }
 
     private boolean bigUpload(Path filePath, BlobInfo bInfo) {
