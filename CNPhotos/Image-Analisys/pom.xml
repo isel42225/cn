@@ -19,6 +19,8 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
+
         </plugins>
     </build>
 
@@ -27,8 +29,7 @@
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-pubsub</artifactId>
-            <!-- acima de 1.61.0 (ex. 1.70.0) dá erro no JAR exec -->
-            <version>1.61.0</version>
+            <version>1.74.0</version>
         </dependency>
 
         <dependency>
@@ -38,10 +39,12 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>6.8.1</version>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-firestore</artifactId>
+            <version>1.4.0</version>
         </dependency>
+
+
 
     </dependencies>
 

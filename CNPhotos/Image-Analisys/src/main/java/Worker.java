@@ -26,8 +26,15 @@ public class Worker implements Runnable {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     ImageIO.write(imgWithFaces,"jpg",baos);
                     byte [] byteFaces = baos.toByteArray();
-                    //blobManager.uploadBlob(byteFaces, filename);
+                    String [] split = filename.split("\\.");
+                    String file = split[0]+"withFaces";
+                    filename = file+split[1];
+                    blobManager.uploadBlob(byteFaces, filename);
                 }
+                for (String label: labels ) {
+                    fireStoreService.addData(filename, label);
+                }
+                //fireStoreService.addData(filename, labels.get(0));
                 // save labels on firestore
                 ackReplyConsumer.ack();
             }catch (Exception e) {
@@ -40,6 +47,7 @@ public class Worker implements Runnable {
     private final PubSubManager pubSubManager = new PubSubManager();
     private final BlobManager blobManager = new BlobManager();
     private final VisionService visionService = new VisionService();
+    private final FireStoreService fireStoreService = new FireStoreService();
 
     @Override
     public void run() {
