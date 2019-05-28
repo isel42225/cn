@@ -11,13 +11,14 @@ import com.google.pubsub.v1.ProjectTopicName;
 import com.google.pubsub.v1.PubsubMessage;
 
 public class PubSubManager {
-    private final static String TOPIC_NAME = "photo-scan";
-    private final static String SUBSCRIPTION_NAME = "photo-scan-sub";
+    private final static String IMAGE_TOPIC = "photo-scan";
+    private final static String MONITOR_TOPIC = "photos-monitor";
+    private final static String IMAGE_SUBSCRIPTION = "photo-scan-sub";
     private final String projectId = ServiceOptions.getDefaultProjectId();
 
-    public void notify(String filename){
+    public void publishImg(String filename){
         try {
-            ProjectTopicName projectTopicName = ProjectTopicName.of(projectId, TOPIC_NAME);
+            ProjectTopicName projectTopicName = ProjectTopicName.of(projectId, IMAGE_TOPIC);
             Publisher publisher = Publisher.newBuilder(projectTopicName).build();
             PubsubMessage message = PubsubMessage
                     .newBuilder()
@@ -32,9 +33,9 @@ public class PubSubManager {
         }
     }
 
-    public void subscribe(MessageReceiver messageHandler) {
+    public void subscribeToImg(MessageReceiver messageHandler) {
         ProjectSubscriptionName projectSubscriptionName =
-                ProjectSubscriptionName.of(projectId, SUBSCRIPTION_NAME);
+                ProjectSubscriptionName.of(projectId, IMAGE_SUBSCRIPTION);
         Subscriber subscriber = Subscriber
                 .newBuilder(projectSubscriptionName, messageHandler)
                 .build();

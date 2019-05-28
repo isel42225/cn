@@ -1,14 +1,13 @@
-import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.ServiceOptions;
-import com.google.cloud.firestore.*;
-import com.google.cloud.firestore.v1.FirestoreAdminClient;
-import com.google.cloud.firestore.v1.FirestoreClient;
-
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.FirestoreOptions;
+import com.google.cloud.firestore.SetOptions;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FireStoreService {
 
@@ -35,8 +34,7 @@ public class FireStoreService {
 
     }
 
-    public void addData(String image, String label) throws ExecutionException, InterruptedException {
-        // TODO put collection instead of string
+    public void addData(String image, String label)  {
         Map<String, String> data = new HashMap<String, String> () {
             {
                 put(image, image);
@@ -44,9 +42,6 @@ public class FireStoreService {
         };
         DocumentReference docRef = db.collection("photos").document(label);
         docRef.set(data, SetOptions.merge());
-
-
-
     }
 
 }

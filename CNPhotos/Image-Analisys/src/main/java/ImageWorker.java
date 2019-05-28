@@ -9,14 +9,16 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
-public class Worker implements Runnable {
+public class ImageWorker implements Runnable {
     private class MessageHandler implements MessageReceiver {
+
         @Override
         public void receiveMessage(PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer) {
             // Fetch image from storage
             // Go to Vision API
             // Submit results to firestore and storage
             try {
+                monitorAgent.notifyWork();
                 String filename = pubsubMessage.getData().toStringUtf8();
                 byte[] content = blobManager.getBlobContent(filename);
                 List<String> labels = visionService.analyse(content);
@@ -50,9 +52,10 @@ public class Worker implements Runnable {
     private final BlobManager blobManager = new BlobManager();
     private final VisionService visionService = new VisionService();
     private final FireStoreService fireStoreService = new FireStoreService();
+    private final MonitorAgent monitorAgent = new MonitorAgent();
 
     @Override
     public void run() {
-        pubSubManager.subscribe(new MessageHandler());
+        pubSubManager.subscribeToImg(new MessageHandler());
     }
 }

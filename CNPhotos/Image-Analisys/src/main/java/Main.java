@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Worker w = new Worker();
+        ImageWorker w = new ImageWorker();
         w.run();
         Scanner scn = new Scanner(System.in);
         System.out.println("Press any key to end...");
