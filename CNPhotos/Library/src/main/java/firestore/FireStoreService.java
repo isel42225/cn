@@ -1,12 +1,15 @@
+package firestore;
 
+import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.ServiceOptions;
-import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.*;
 
-import javax.swing.text.Document;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class FireStoreService {
 
@@ -34,7 +37,8 @@ public class FireStoreService {
 
     }
 
-    public void addData(String image, String label)  {
+    public void addData(String image, String label) {
+        // TODO put collection instead of string
         Map<String, String> data = new HashMap<String, String> () {
             {
                 put(image, image);
@@ -43,15 +47,20 @@ public class FireStoreService {
         DocumentReference docRef = db.collection(collection).document(label);
         docRef.set(data, SetOptions.merge());
     }
-    public Map searchImage(String label) throws ExecutionException, InterruptedException {
-        DocumentReference dr = db.collection(collection).document(label);
-        ApiFuture<DocumentSnapshot> future = dr.get();
-        DocumentSnapshot document = future.get();
-        if(document.exists()){
-            return document.getData();
-        }
-        else{
-            System.out.println("No images available");
+
+    public Map searchImage(String label) {
+        try {
+            DocumentReference dr = db.collection(collection).document(label);
+            ApiFuture<DocumentSnapshot> future = dr.get();
+            DocumentSnapshot document = future.get();
+            if (document.exists()) {
+                return document.getData();
+            } else {
+                System.out.println("No images available");
+                return null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
     }

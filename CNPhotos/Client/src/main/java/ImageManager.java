@@ -1,18 +1,24 @@
+
+import com.google.cloud.firestore.Firestore;
+import firestore.FireStoreService;
 import pubsub.PubSubManager;
 import storage.BlobManager;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ImageManager {
 
     private final BlobManager blobManager;
     private final PubSubManager pubSubManager;
+    private final FireStoreService fireStoreService;
 
     public ImageManager() {
         this.blobManager = new BlobManager();
         this.pubSubManager = new PubSubManager();
+        this.fireStoreService = new FireStoreService();
 
     }
 
@@ -33,5 +39,11 @@ public class ImageManager {
            // try again with exponential backOff
            // https://cloud.google.com/storage/docs/exponential-backoff
        }
+    }
+
+    public void search() {
+        Scanner scn = new Scanner(System.in);
+        Map map = fireStoreService.searchImage(scn.nextLine());
+        map.values().forEach(System.out::println);
     }
 }
