@@ -26,7 +26,8 @@ public class BlobManager {
     }
 
     public List<Blob> getBlobs(List<String> blobNames){
-        List<BlobId> blobIds = blobNames.stream()
+        List<BlobId> blobIds = blobNames
+                .stream()
                 .map(name -> BlobId.of(BUCKET_NAME, name))
                 .collect(Collectors.toList());
         List<Blob> blobList = storage.get(blobIds);

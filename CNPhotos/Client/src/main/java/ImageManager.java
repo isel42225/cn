@@ -9,9 +9,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ImageManager {
 
@@ -47,9 +46,9 @@ public class ImageManager {
 
     public void search() throws IOException {
         Scanner scn = new Scanner(System.in);
-        Map map = fireStoreService.searchImage(scn.nextLine());
-        List<String> blobNameList = (List<String>) map.values();
-        List<Blob> list = blobManager.getBlobs(blobNameList);
+        List<String> blobNames =  fireStoreService.searchImage(scn.nextLine());
+
+        List<Blob> list = blobManager.getBlobs(blobNames);
         for (Blob b: list) {
             Files.write(new File(System.getProperty("user.dir")+ b.getName()).toPath(), b.getContent());
         }

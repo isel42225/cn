@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 public class ImageSearchCommand extends Command {
 
     public static final String CommandTitle = "Search an image";
@@ -10,6 +12,10 @@ public class ImageSearchCommand extends Command {
 
     @Override
     public void execute() {
-        imageManager.search();
+        try {
+            imageManager.search();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

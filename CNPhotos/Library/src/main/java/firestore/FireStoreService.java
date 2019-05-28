@@ -6,8 +6,11 @@ import com.google.cloud.ServiceOptions;
 import com.google.cloud.firestore.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FireStoreService {
 
@@ -46,13 +49,17 @@ public class FireStoreService {
         docRef.set(data, SetOptions.merge());
     }
 
-    public Map searchImage(String label) {
+    public List<String> searchImage(String label) {
         try {
             DocumentReference dr = db.collection(collection).document(label);
             ApiFuture<DocumentSnapshot> future = dr.get();
             DocumentSnapshot document = future.get();
             if (document.exists()) {
-                return document.getData();
+                return document.getData()
+                        .values()
+                        .stream()
+                        .map(Object::toString)
+                        .collect(Collectors.toList());
             } else {
                 System.out.println("No images available");
                 return null;
