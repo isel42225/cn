@@ -37,14 +37,13 @@ public class FireStoreService {
 
     public void addData(String image, String label) throws ExecutionException, InterruptedException {
         // TODO put collection instead of string
-        Map<String, List<String>> data = new HashMap<String, List<String>> () {
+        Map<String, String> data = new HashMap<String, String> () {
             {
-                put("images", new ArrayList<>());
+                put(image, image);
             }
         };
         DocumentReference docRef = db.collection("photos").document(label);
-        docRef.set(data, SetOptions.merge()).get();
-        docRef.update("images", image);
+        docRef.set(data, SetOptions.merge());
 
 
 

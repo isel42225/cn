@@ -27,18 +27,20 @@ public class Worker implements Runnable {
                     ImageIO.write(imgWithFaces,"jpg",baos);
                     byte [] byteFaces = baos.toByteArray();
                     String [] split = filename.split("\\.");
-                    String file = split[0]+"withFaces";
-                    filename = file+split[1];
-                    blobManager.uploadBlob(byteFaces, filename);
+                    String facesFile = split[0]+"withFaces." + split[1];
+                    blobManager.uploadBlob(byteFaces, facesFile);
                 }
+
+                // save labels on firestore
                 for (String label: labels ) {
                     fireStoreService.addData(filename, label);
                 }
-                //fireStoreService.addData(filename, labels.get(0));
-                // save labels on firestore
-                ackReplyConsumer.ack();
+
+
             }catch (Exception e) {
                 e.printStackTrace();
+            }
+            finally {
                 ackReplyConsumer.ack();
             }
         }

@@ -15,16 +15,26 @@ public class Client {
         while((input = scanner.nextInt()) != 99) {
             Command cmd = commandHashMap.get(input);
             cmd.execute();
+            clearConsole();
+            printCommands();
         }
     }
 
-    public static void printCommands(){
+    private static void printCommands(){
         System.out.println("Available commands:");
         for(int idx : commandHashMap.keySet()){
             System.out.println(String.format("%d : %s", idx, commandHashMap.get(idx).commandTitle));
         }
         System.out.println("99 : Exit");
         System.out.print("> ");
+    }
+
+    private static void clearConsole()
+    {
+        for (int y = 0; y < 25; y++) {
+            System.out.println("\n");
+        }
+
     }
 
 }

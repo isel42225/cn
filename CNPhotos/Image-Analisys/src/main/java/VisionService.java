@@ -12,6 +12,8 @@ import java.util.List;
 
 public class VisionService {
 
+    public static final double SCORE_THRESHOLD = 0.85;
+
     public List<String> analyse(byte[] content) {
         try(ImageAnnotatorClient vision = ImageAnnotatorClient.create()){
             ByteString imgBytes = ByteString.copyFrom(content);
@@ -29,7 +31,7 @@ public class VisionService {
             AnnotateImageResponse imgResponse = response.getResponsesList().get(0);
             List<String> res = new ArrayList<>();
             for(EntityAnnotation annotation : imgResponse.getLabelAnnotationsList()){
-                if(annotation.getScore() > 0.85)
+                if(annotation.getScore() > SCORE_THRESHOLD)
                     res.add(annotation.getDescription());
             }
             return res;
