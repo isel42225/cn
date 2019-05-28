@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BlobManager {
     private final String BUCKET_NAME = "cn-photos-g08";
@@ -19,9 +21,18 @@ public class BlobManager {
     public byte [] getBlobContent(String name) {
         BlobId blobId = BlobId.of(BUCKET_NAME, name);
         Blob blob = storage.get(blobId);
-        byte [] content =  blob.getContent(Blob.BlobSourceOption.generationMatch());
+        byte [] content =  blob.getContent();
         return content;
     }
+
+    public List<Blob> getBlobs(List<String> blobNames){
+        List<BlobId> blobIds = blobNames.stream()
+                .map(name -> BlobId.of(BUCKET_NAME, name))
+                .collect(Collectors.toList());
+        List<Blob> blobList = storage.get(blobIds);
+        return blobList;
+    }
+
 
     public boolean uploadBlob(Path filePath){
         try {
