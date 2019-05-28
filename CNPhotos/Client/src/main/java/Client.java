@@ -9,6 +9,7 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         ImageManager imageManager = new ImageManager();
         commandHashMap.put(1, new ImageUploadCommand(imageManager));
+        commandHashMap.put(2, new ImageSearchCommand(imageManager));
 
         printCommands();
         int input = -1;
