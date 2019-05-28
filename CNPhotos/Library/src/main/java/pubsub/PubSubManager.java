@@ -41,4 +41,20 @@ public class PubSubManager {
                 .build();
         subscriber.startAsync().awaitRunning();
     }
+
+    public void publishMetric(float imgsPerMin) {
+        try{
+            ProjectTopicName projectTopicName = ProjectTopicName.of(projectId, MONITOR_TOPIC);
+            Publisher publisher = Publisher.newBuilder(projectTopicName).build();
+            PubsubMessage message = PubsubMessage
+                    .newBuilder()
+                    .setData(ByteString.copyFromUtf8(String.valueOf(imgsPerMin)))
+                    .build();
+            ApiFuture<String> future =  publisher.publish(message);
+            while(!future.isDone());
+            publisher.shutdown();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

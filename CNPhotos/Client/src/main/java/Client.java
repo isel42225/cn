@@ -30,12 +30,10 @@ public class Client {
         System.out.print("> ");
     }
 
-    private static void clearConsole()
-    {
+    private static void clearConsole() {
         for (int y = 0; y < 25; y++) {
             System.out.println("\n");
         }
-
     }
 
 }

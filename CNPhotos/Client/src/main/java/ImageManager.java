@@ -1,5 +1,5 @@
 
-import com.google.cloud.firestore.Firestore;
+
 import firestore.FireStoreService;
 import pubsub.PubSubManager;
 import storage.BlobManager;
@@ -33,7 +33,7 @@ public class ImageManager {
         if(success) {
             System.out.println("Upload completed");
             String filename = filePath.getFileName().toString();
-            pubSubManager.notify(filename);
+            pubSubManager.publishImg(filename);
         }
         else{
            // try again with exponential backOff

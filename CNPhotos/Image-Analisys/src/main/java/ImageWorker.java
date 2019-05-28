@@ -1,12 +1,14 @@
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.pubsub.v1.PubsubMessage;
+import firestore.FireStoreService;
 import pubsub.PubSubManager;
 import storage.BlobManager;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class ImageWorker implements Runnable {
@@ -24,27 +26,28 @@ public class ImageWorker implements Runnable {
                 List<String> labels = visionService.analyse(content);
                 BufferedImage imgWithFaces = visionService.detectFaces(content);
                 if(imgWithFaces != null) {
-                    //save on Storage
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ImageIO.write(imgWithFaces,"jpg",baos);
-                    byte [] byteFaces = baos.toByteArray();
-                    String [] split = filename.split("\\.");
-                    String facesFile = split[0]+"withFaces." + split[1];
-                    blobManager.uploadBlob(byteFaces, facesFile);
+                   saveImgWithFaces(imgWithFaces, filename);
                 }
-
                 // save labels on firestore
                 for (String label: labels ) {
                     fireStoreService.addData(filename, label);
                 }
-
-
             }catch (Exception e) {
                 e.printStackTrace();
             }
             finally {
                 ackReplyConsumer.ack();
             }
+        }
+
+        private void saveImgWithFaces(BufferedImage img, String filename) throws IOException {
+            //save on Storage
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(img,"jpg",baos);
+            byte [] byteFaces = baos.toByteArray();
+            String [] split = filename.split("\\.");
+            String facesFile = split[0]+"withFaces." + split[1];
+            blobManager.uploadBlob(byteFaces, facesFile);
         }
     }
 

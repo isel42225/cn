@@ -1,7 +1,5 @@
 import pubsub.PubSubManager;
 
-import java.time.LocalDateTime;
-
 public class MonitorAgent {
 
     private final PubSubManager pubSubManager = new PubSubManager();
@@ -14,5 +12,6 @@ public class MonitorAgent {
         float elapsedInSecs = (now - startTime)/ 1000;
         float elapsedInMins = elapsedInSecs / 60;
         float imgsPerMin = nOfImgs / elapsedInMins;
+        pubSubManager.publishMetric(imgsPerMin);
     }
 }
