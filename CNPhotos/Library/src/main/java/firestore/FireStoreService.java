@@ -14,9 +14,6 @@ public class FireStoreService {
     private final String collection = "photos";
     private Firestore db;
 
-    private Set<String> labelCache = new HashSet<>();
-
-
     public FireStoreService() {
         try {
             initialize();
@@ -39,7 +36,8 @@ public class FireStoreService {
     public void addData(String image, String label) {
         try {
             DocumentReference docRef = db.collection(collection).document(label);
-            if (!labelCache.contains(label)) {
+            DocumentSnapshot document = docRef.get().get();
+            if(!document.exists()) {
                 ApiFuture<WriteResult> future = docRef.set(initImgCollection());
                 future.get();
             }
@@ -65,7 +63,7 @@ public class FireStoreService {
             ApiFuture<DocumentSnapshot> future = dr.get();
             DocumentSnapshot document = future.get();
             if (document.exists()) {
-                List<String> ret = new ArrayList<>(document.getData().keySet());
+                List<String> ret = document.toObject(ImageCollection.class).getImages();
                 return ret;
             } else {
                 System.out.println("No images available");
