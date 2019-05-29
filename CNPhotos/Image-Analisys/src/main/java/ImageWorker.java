@@ -11,45 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class ImageWorker implements Runnable {
-    private class MessageHandler implements MessageReceiver {
-
-        @Override
-        public void receiveMessage(PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer) {
-            // Fetch image from storage
-            // Go to Vision API
-            // Submit results to firestore and storage
-            try {
-                monitorAgent.notifyWork();
-                String filename = pubsubMessage.getData().toStringUtf8();
-                byte[] content = blobManager.getBlobContent(filename);
-                List<String> labels = visionService.analyse(content);
-                BufferedImage imgWithFaces = visionService.detectFaces(content);
-                if(imgWithFaces != null) {
-                   saveImgWithFaces(imgWithFaces, filename);
-                }
-                // save labels on firestore
-                for (String label: labels ) {
-                    fireStoreService.addData(filename, label);
-                }
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-            finally {
-                ackReplyConsumer.ack();
-            }
-        }
-
-        private void saveImgWithFaces(BufferedImage img, String filename) throws IOException {
-            //save on Storage
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(img,"jpg",baos);
-            byte [] byteFaces = baos.toByteArray();
-            String [] split = filename.split("\\.");
-            String facesFile = split[0]+"withFaces." + split[1];
-            blobManager.uploadBlob(byteFaces, facesFile);
-        }
-    }
+public class ImageWorker implements MessageReceiver{
 
     private final PubSubManager pubSubManager = new PubSubManager();
     private final BlobManager blobManager = new BlobManager();
@@ -57,8 +19,52 @@ public class ImageWorker implements Runnable {
     private final FireStoreService fireStoreService = new FireStoreService();
     private final MonitorAgent monitorAgent = new MonitorAgent();
 
+
+    public void work() {
+        pubSubManager.subscribeToImg(this);
+    }
+
     @Override
-    public void run() {
-        pubSubManager.subscribeToImg(new MessageHandler());
+    public void receiveMessage(PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer) {
+        // Fetch image from storage
+        // Go to Vision API
+        // Submit results to firestore and storage
+        try {
+            System.out.println("Message Handler enter");
+            monitorAgent.notifyWork();
+            System.out.println("Notified Monitor");
+            String filename = pubsubMessage.getData().toStringUtf8();
+            byte[] content = blobManager.getBlobContent(filename);
+            System.out.println("Got Image");
+            List<String> labels = visionService.analyse(content);
+            System.out.println("Analysed image labels");
+            BufferedImage imgWithFaces = visionService.detectFaces(content);
+            System.out.println("Analysed image for faces");
+            if(imgWithFaces != null) {
+                saveImgWithFaces(imgWithFaces, filename);
+                System.out.println("Drew square in face");
+            }
+            // save labels on firestore
+            for (String label: labels ) {
+                fireStoreService.addData(filename, label);
+                System.out.println("Added labels to firestore");
+            }
+            System.out.println("Message Handler leave!");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            ackReplyConsumer.ack();
+        }
+    }
+
+    private void saveImgWithFaces(BufferedImage img, String filename) throws IOException {
+        //save on Storage
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(img,"jpg",baos);
+        byte [] byteFaces = baos.toByteArray();
+        String [] split = filename.split("\\.");
+        String facesFile = split[0]+"withFaces." + split[1];
+        blobManager.uploadBlob(byteFaces, facesFile);
     }
 }

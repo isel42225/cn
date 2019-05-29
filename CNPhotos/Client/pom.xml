@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ise.cn.g08</groupId>
+    <groupId>isel.cn.g08</groupId>
     <artifactId>Client</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -19,6 +19,7 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
@@ -38,6 +39,25 @@
             <!-- acima de 1.61.0 (ex. 1.70.0) dá erro no JAR exec -->
             <version>1.61.0</version>
         </dependency>
+
+        <!-- GCP Library dependency -->
+        <dependency>
+            <groupId>isel.cn.g08</groupId>
+            <artifactId>gcp-library</artifactId>
+            <version>0.1</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/../Library/target/gcp-library-0.1-jar-with-dependencies.jar</systemPath>
+        </dependency>
+
+        <!-- Monitor Contract dependency -->
+        <dependency>
+            <groupId>isel.cn.g08</groupId>
+            <artifactId>MonitorContract</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/../MonitorController/MonitorContract/target/MonitorContract-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
 

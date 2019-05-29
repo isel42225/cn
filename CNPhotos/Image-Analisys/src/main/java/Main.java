@@ -1,12 +1,14 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         ImageWorker w = new ImageWorker();
-        w.run();
-        Scanner scn = new Scanner(System.in);
-        System.out.println("Press any key to end...");
-        scn.next();
+        VisionService vision = new VisionService();
+        w.work();
+        System.out.println("Working....");
     }
 }

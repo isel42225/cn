@@ -6,17 +6,15 @@ import com.google.cloud.ServiceOptions;
 import com.google.cloud.firestore.*;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class FireStoreService {
 
     private final String projectId = ServiceOptions.getDefaultProjectId();
     private final String collection = "photos";
     private Firestore db;
+
+    private Set<String> labelCache = new HashSet<>();
 
 
     public FireStoreService() {
@@ -39,14 +37,26 @@ public class FireStoreService {
     }
 
     public void addData(String image, String label) {
-        // TODO put collection instead of string
-        Map<String, String> data = new HashMap<String, String> () {
+        try {
+            DocumentReference docRef = db.collection(collection).document(label);
+            if (!labelCache.contains(label)) {
+                ApiFuture<WriteResult> future = docRef.set(initImgCollection());
+                future.get();
+            }
+
+            docRef.update("images", FieldValue.arrayUnion(image));
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private HashMap<String, List<String>> initImgCollection() {
+        return new HashMap<String, List<String>>() {
             {
-                put(image, image);
+                put("images", new ArrayList<>());
             }
         };
-        DocumentReference docRef = db.collection(collection).document(label);
-        docRef.set(data, SetOptions.merge());
     }
 
     public List<String> searchImage(String label) {
@@ -55,11 +65,8 @@ public class FireStoreService {
             ApiFuture<DocumentSnapshot> future = dr.get();
             DocumentSnapshot document = future.get();
             if (document.exists()) {
-                return document.getData()
-                        .values()
-                        .stream()
-                        .map(Object::toString)
-                        .collect(Collectors.toList());
+                List<String> ret = new ArrayList<>(document.getData().keySet());
+                return ret;
             } else {
                 System.out.println("No images available");
                 return null;

@@ -1,3 +1,5 @@
+import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.core.GoogleCredentialsProvider;
 import com.google.cloud.vision.v1.*;
 import com.google.cloud.vision.v1.Image;
 import com.google.protobuf.ByteString;
@@ -6,6 +8,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,8 +17,9 @@ public class VisionService {
 
     public static final double SCORE_THRESHOLD = 0.85;
 
-    public List<String> analyse(byte[] content) {
+    public List<String> analyse(byte[] content) throws IOException {
         try(ImageAnnotatorClient vision = ImageAnnotatorClient.create()){
+            System.out.println("Got Vision Client");
             ByteString imgBytes = ByteString.copyFrom(content);
             Image img = Image.newBuilder().setContent(imgBytes).build();
             Feature feature = Feature.newBuilder()
@@ -28,7 +32,9 @@ public class VisionService {
                     .build();
             BatchAnnotateImagesResponse response = vision
                     .batchAnnotateImages(Collections.singletonList(request));
+            System.out.println("Requested image annotations");
             AnnotateImageResponse imgResponse = response.getResponsesList().get(0);
+            System.out.println("Got Image annotations");
             List<String> res = new ArrayList<>();
             for(EntityAnnotation annotation : imgResponse.getLabelAnnotationsList()){
                 if(annotation.getScore() > SCORE_THRESHOLD)
@@ -36,6 +42,7 @@ public class VisionService {
             }
             return res;
         }catch (Exception e){
+            System.out.println("Error happened");
             e.printStackTrace();
             return null;
         }
