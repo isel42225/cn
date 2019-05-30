@@ -30,6 +30,7 @@ public class ImageWorker implements MessageReceiver{
         // Go to Vision API
         // Submit results to firestore and storage
         try {
+            long start = System.currentTimeMillis();
             System.out.println("Message Handler enter");
             monitorAgent.notifyWork();
             System.out.println("Notified Monitor");
@@ -49,6 +50,8 @@ public class ImageWorker implements MessageReceiver{
                 fireStoreService.addData(filename, label);
                 System.out.println("Added labels to firestore");
             }
+            long end = System.currentTimeMillis() - start;
+            System.out.println("Analysis took : " + end + " ms");
             System.out.println("Message Handler leave!");
         }catch (Exception e) {
             e.printStackTrace();

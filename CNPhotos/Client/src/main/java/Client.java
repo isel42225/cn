@@ -8,8 +8,11 @@ public class Client {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ImageManager imageManager = new ImageManager();
+        MonitorClient monitorClient = new MonitorClient();
         commandHashMap.put(1, new ImageUploadCommand(imageManager));
         commandHashMap.put(2, new ImageSearchCommand(imageManager));
+        commandHashMap.put(3, new MonitorGetStateCommand(monitorClient));
+        commandHashMap.put(4, new ImageFolderUploadCommand(imageManager));
 
         printCommands();
         int input = -1;

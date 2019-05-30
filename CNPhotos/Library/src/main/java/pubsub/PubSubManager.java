@@ -14,6 +14,7 @@ public class PubSubManager {
     private final static String IMAGE_TOPIC = "photo-scan";
     private final static String MONITOR_TOPIC = "photos-monitor";
     private final static String IMAGE_SUBSCRIPTION = "photo-scan-sub";
+    private final static String MONITOR_SUBSCRIPTION = "photo-monitor-sub";
     private final String projectId = ServiceOptions.getDefaultProjectId();
 
     public void publishImg(String filename){
@@ -42,13 +43,12 @@ public class PubSubManager {
         subscriber.startAsync().awaitRunning();
     }
 
-    public void publishMetric(float imgsPerMin) {
+    public void publishMetric() {
         try{
             ProjectTopicName projectTopicName = ProjectTopicName.of(projectId, MONITOR_TOPIC);
             Publisher publisher = Publisher.newBuilder(projectTopicName).build();
             PubsubMessage message = PubsubMessage
                     .newBuilder()
-                    .setData(ByteString.copyFromUtf8(String.valueOf(imgsPerMin)))
                     .build();
             ApiFuture<String> future =  publisher.publish(message);
             while(!future.isDone());
@@ -56,5 +56,14 @@ public class PubSubManager {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void subscribeToMonitor(MessageReceiver messageHandler) {
+        ProjectSubscriptionName projectSubscriptionName =
+                ProjectSubscriptionName.of(projectId, MONITOR_SUBSCRIPTION);
+        Subscriber subscriber = Subscriber
+                .newBuilder(projectSubscriptionName, messageHandler)
+                .build();
+        subscriber.startAsync().awaitRunning();
     }
 }

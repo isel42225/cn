@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ImageManager {
 
@@ -38,10 +39,25 @@ public class ImageManager {
             String filename = filePath.getFileName().toString();
             pubSubManager.publishImg(filename);
         }
-        else{
-           // try again with exponential backOff
-           // https://cloud.google.com/storage/docs/exponential-backoff
-       }
+
+    }
+
+    public void uploadFolder() {
+        String rootDir = "C:\\Users\\gonca\\ISEL\\Cadeiras\\18-19v\\CN\\repo\\CNPhotos\\images";
+        try (Stream<Path> paths = Files.walk(Paths.get(rootDir))) {
+            paths
+                    .filter(Files::isRegularFile)
+            .forEach(p -> {
+                boolean success = blobManager.uploadBlob(p);
+                if(success) {
+                    System.out.println("Upload completed");
+                    String filename = p.getFileName().toString();
+                    pubSubManager.publishImg(filename);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void search() throws IOException {
