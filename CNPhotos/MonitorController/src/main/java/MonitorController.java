@@ -45,6 +45,7 @@ public class MonitorController implements MessageReceiver {
                         decreaseTendency = 0;
                     }
                 }
+                setCurrLoad(load);
                 nOfImgs = 0;
             }catch (Exception e){
                 e.printStackTrace();
@@ -120,6 +121,10 @@ public class MonitorController implements MessageReceiver {
             e.printStackTrace();
         }
 
+    }
+
+    private void setCurrLoad(int load) {
+        this.state.setCurrImgLoad(load);
     }
 
     public void setImgThreshold(int newThreshold) {
