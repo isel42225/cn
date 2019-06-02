@@ -62,11 +62,14 @@ public class ImageManager {
 
     public void search() throws IOException {
         Scanner scn = new Scanner(System.in);
+        System.out.print("Category ?\n>");
         List<String> blobNames =  fireStoreService.searchImage(scn.nextLine());
 
         List<Blob> list = blobManager.getBlobs(blobNames);
+        String downloadDir = System.getProperty("user.dir");
         for (Blob b: list) {
-            Files.write(new File(System.getProperty("user.dir")+ b.getName()).toPath(), b.getContent());
+            Files.write(new File(downloadDir + b.getName()).toPath(), b.getContent());
         }
+        System.out.println("Your images were dowloaded to " + downloadDir);
     }
 }

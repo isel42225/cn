@@ -2,6 +2,9 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import monitorstubs.Empty;
 import monitorstubs.MonitorServiceGrpc;
+import monitorstubs.SetRequest;
+
+import java.util.Scanner;
 
 public class MonitorClient {
 
@@ -21,5 +24,16 @@ public class MonitorClient {
     public void getMonitorState() {
         Empty req = Empty.newBuilder().build();
         monitorServiceStub.getState(req, new StateStreamObserver());
+    }
+
+    public void setThreshold() {
+        Scanner scn = new Scanner(System.in);
+        System.out.print("New threshold : ");
+        int threshold = scn.nextInt();
+        SetRequest request = SetRequest.
+                newBuilder()
+                .setImgPerMin(threshold)
+                .build();
+        monitorServiceStub.setThreshold(request, new SetResultStreamObserver());
     }
 }

@@ -12,7 +12,8 @@ public class Client {
         commandHashMap.put(1, new ImageUploadCommand(imageManager));
         commandHashMap.put(2, new ImageSearchCommand(imageManager));
         commandHashMap.put(3, new MonitorGetStateCommand(monitorClient));
-        commandHashMap.put(4, new ImageFolderUploadCommand(imageManager));
+        commandHashMap.put(4, new MonitorSetThresholdCommand(monitorClient));
+        commandHashMap.put(5, new ImageFolderUploadCommand(imageManager));
 
         printCommands();
         int input = -1;
