@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "monitorstubs";
+
+package monitorservice;
+
+service MonitorService {
+    rpc setThreshold (SetRequest) returns (SetResult);
+    rpc getState (Empty) returns(State);
+}
+
+message SetResult {
+    bool success = 1;
+}
+
+message SetRequest {
+    int32 imgPerMin = 1;
+}
+
+message Empty{}
+
+message State {
+    string currThreshold = 1;
+    int32 nOfVms = 2;
+    string currLoad = 3;
+}
