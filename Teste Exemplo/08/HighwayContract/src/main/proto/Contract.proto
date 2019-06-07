@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "highwaytubs";
+
+package highwayservice; // package do proto
+
+service HighwayService {
+    rpc enter (CarInfo) returns (Void);
+    rpc leave (CarInfo) returns (Toll);
+}
+
+message Void {}
+
+message CarInfo {
+    string licensePlate = 1;
+    int32 entranceOrExit = 2;
+}
+
+message Toll {
+    string value = 1;
+}
