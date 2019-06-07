@@ -83,7 +83,7 @@ public class MonitorController implements MessageReceiver {
             pubSubManager = new PubSubManager();
             pubSubManager.subscribeToMonitor(this);
             timer = new Timer();
-            timer.schedule(new MyTask(),0, 1000 * 5);
+            timer.schedule(new MyTask(),0, 1000 * 20);
 
         }catch (Exception e){
             e.printStackTrace();
