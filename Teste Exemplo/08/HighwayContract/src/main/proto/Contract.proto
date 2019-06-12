@@ -6,11 +6,16 @@ option java_package = "highwaystubs";
 package highwayservice; // package do proto
 
 service HighwayService {
-    rpc enter (CarInfo) returns (Void);
+    rpc enter (CarInfo) returns (stream Notification);
     rpc leave (CarInfo) returns (Toll);
+    rpc test (stream Void) returns (Void);
 }
 
 message Void {}
+
+message Notification {
+    string info = 1;
+}
 
 message CarInfo {
     string licensePlate = 1;
